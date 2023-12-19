@@ -5,53 +5,62 @@ nltk.download('averaged_perceptron_tagger')
 from nltk.tokenize import word_tokenize
 from nltk.util import ngrams
 from nltk.corpus import brown
-from nltk.chunk import RegexpChunkParser
-sen = ""The quick brown fox jumps over lazy dog""
-tokens=word_tokenize(sen)
+from nltk.chunk import RegexpParser
+sentence = ""The quick brown fox jumps over the lazy dog""
+tokens = word_tokenize(sentence)
 print(tokens)
-pos_tags=nltk.pos_tag(tokens)
+pos_tags = nltk.pos_tag(tokens)
+print(""Part-of-Speech Tagging: "")
 print(pos_tags)
-text=brown.words(categories='news')[:1000]
-bigrams=list(ngrams(text,2))
-fre_dist=nltk.FreqDist(bigrams)
-for i in bigrams:
-    print(f""{i}:{fre_dist[i]}"")
-tag=nltk.pos_tag(word_tokenize(""The quick brown fox jumps over the lazy dog""))
-grammar=r""NP:{<DT>?<JJ>*<NN>}""
-cp=RegexpChunkParser(grammar)
-res=cp.parse(tag)
-print(res)
+text = brown.words(categories='news')[:1000]
+bigrams = list(ngrams(text, 2))
+freq_dist = nltk.FreqDist(bigrams)
+print(""\n N-gram Analysis (Bigrams with Smoothing): "")
+for bigram in bigrams:
+print(f""{bigram}: {freq_dist[bigram]}"")
+tagged_sentence = nltk.pos_tag(word_tokenize(""The quick brown fox jumps over the lazy dog""))
+grammar = r""NP: {<DT>?<JJ>*<NN>}""
+cp = RegexpParser(grammar)
+result = cp.parse(tagged_sentence)
+print(""\n Chunking with Regular Expressions and POS tags: "")
+print(result)
 
 
 
-
-
-"
-"import tensorflow as tf
+ import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,Flatten
+from tensorflow.keras.layers import Dense, Flatten
 from tensorflow.keras.utils import to_categorical
-
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-
-x_train=x_train / 255.0
-x_test=x_test / 255.0
-
-x_train=x_train.reshape(-1,28 * 28)
-x_test=x_test.reshape(-1,28*28)
-
-y_train=to_categorical(y_train)
-y_test=to_categorical(y_test)
-
+# Load the MNIST dataset
+(X_train, y_train), (X_test, y_test) =mnist.load_data()
+# Normalize pixel values to be between 0 and 1
+X_train = X_train / 255.0
+X_test = X_test / 255.0
+# Flatten the images (convert 28x28 images to 1D vectors)
+X_train = X_train.reshape(-1, 28 * 28)
+print(X_train)
+X_test = X_test.reshape(-1, 28 * 28)
+print(X_train)
+# One-hot encode the target labels
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+print(y_test)
+# Create a simple feedforward neural network model
 model=Sequential([
-    Dense(128,activation=""relu"",input_shape=(28*28,)),
-    Dense(68,activation=""relu""),
-    Dense(10,activation=""softmax"")
-
+Dense(128, activation='relu', input_shape=(28 * 28,)),
+Dense(68, activation='relu'),
+Dense(10, activation='softmax')
 ])
-model.compile(optimizer=""Adam"",loss=""categorical_crossentropy"",metrics=['accuracy'])
-
-model.fit(x_train,y_train,epochs=5 ,batch_size=32,validation_split=0.2)
-loss,accuracy=model.evaluate(x_test,y_test)
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.fit(X_train,y_train, epochs=5 , batch_size=32, validation_split=0.2)
+loss, accuracy= model.evaluate(X_test,y_test)
 print(accuracy)"
+
+
+
+
+
+
+
+
